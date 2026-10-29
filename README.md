@@ -76,6 +76,26 @@ Pre-commit hooks run `lint-staged` on the staged files only. Enable them once wi
 pnpm hooks          # git config core.hooksPath .husky
 ```
 
+## Configuration
+
+Every setting is an environment variable, validated in one place (`src/lib/env.ts`) at startup, so a
+missing secret fails immediately with a readable message instead of halfway through an ingest run.
+
+| Where                   | What lives there                                                         |
+| ----------------------- | ------------------------------------------------------------------------ |
+| `.env.example`          | the full list, with no values — the source of truth for _what_ is needed |
+| `.env.local`            | your local values; **git-ignored**                                       |
+| Vercel project settings | production values, encrypted at rest                                     |
+| GitHub Actions secrets  | only what CI needs (currently nothing)                                   |
+
+```
+cp .env.example .env.local   # then fill it in
+```
+
+**Never commit a filled copy.** Two secrets here are unusually sensitive: the **service-role key**
+bypasses row-level security, and the **Gmail app password** grants full access to the project
+mailbox. Both are server-only, never logged, and rotate by regenerating them and updating one place.
+
 ## Constraints (deliberate)
 
 | Constraint              | Why                                                                |

@@ -11,6 +11,11 @@ coverage/
 # Lockfile formatting is managed by pnpm, not Prettier.
 pnpm-lock.yaml
 
+# .env files have no parser and their layout is deliberate.
+.env.example
+.env
+.env.*
+
 # Local environment and secrets — never committed
 .env
 .env.*
