@@ -45,6 +45,7 @@ Architecture decisions live in [`docs/adr/`](docs/adr/); the reasoning is in
 ## Repository layout
 
 ```
+AGENTS.md    the rules for working here — read before changing code
 docs/        design pack, ADRs, runbooks, stage-by-stage record
 src/         application code                        (arrives with the walking skeleton)
 scripts/     migrations and operator tools           (arrives with the walking skeleton)
