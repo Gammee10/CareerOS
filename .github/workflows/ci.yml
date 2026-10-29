@@ -49,3 +49,8 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+      # Proves the Next build compiles before Vercel ever sees the commit. No secrets are needed:
+      # the database client is created lazily, so the build never connects.
+      - name: Build
+        run: pnpm build

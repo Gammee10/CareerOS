@@ -38,4 +38,13 @@ export default tseslint.config(
       'no-console': 'off',
     },
   },
+
+  {
+    // The single place allowed to write to the console. Everywhere else, use logEvent/logError so
+    // email content cannot be logged by accident.
+    files: ['src/lib/log.ts'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
 );
