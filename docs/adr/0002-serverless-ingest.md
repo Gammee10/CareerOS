@@ -1,7 +1,7 @@
 # ADR 0002 — Serverless ingest, triggered by an external scheduler
 
 **Status:** Accepted — 2026-10-22
-**Amends:** ADR 0001 (the IMAP mechanism stays; the *trigger* changes)
+**Amends:** ADR 0001 (the IMAP mechanism stays; the _trigger_ changes)
 **Related:** Stage 4 spec (ingest NFR), Spike 4 (scheduler), Step 3 (build/buy/borrow)
 
 ## Context
@@ -27,14 +27,14 @@ soon**, and the digest to fire once a week.
 
 ## Consequences
 
-| Change | Detail |
-|---|---|
-| Ingest latency | **< 2 min becomes < 6 min p95** (5-minute trigger + processing). Spec amended |
-| Always-on process | Removed entirely. Nothing to keep awake, nothing to pay for |
-| Digest precision | Timer no longer has to be exact; idempotency does the work |
-| Database connections | Serverless needs the **Supabase pooler** connection string, not the direct one |
-| Cost | **$0/month** |
-| **Region** | **The function must run in the database's region.** Measured in Step 9: 13.6 s from Nairobi versus **1.7 s from Dublin**, with `db_connect` falling from 2 150 ms to 18 ms. Same code, different place |
+| Change               | Detail                                                                                                                                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Ingest latency       | **< 2 min becomes < 6 min p95** (5-minute trigger + processing). Spec amended                                                                                                                          |
+| Always-on process    | Removed entirely. Nothing to keep awake, nothing to pay for                                                                                                                                            |
+| Digest precision     | Timer no longer has to be exact; idempotency does the work                                                                                                                                             |
+| Database connections | Serverless needs the **Supabase pooler** connection string, not the direct one                                                                                                                         |
+| Cost                 | **$0/month**                                                                                                                                                                                           |
+| **Region**           | **The function must run in the database's region.** Measured in Step 9: 13.6 s from Nairobi versus **1.7 s from Dublin**, with `db_connect` falling from 2 150 ms to 18 ms. Same code, different place |
 
 ### Region rule (measured, not assumed)
 

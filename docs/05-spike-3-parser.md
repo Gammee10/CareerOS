@@ -7,7 +7,7 @@
 
 ## The question, in plain words
 
-An email arrives: *"Thank you for applying to Northbeam — we'd like to invite you to interview."*
+An email arrives: _"Thank you for applying to Northbeam — we'd like to invite you to interview."_
 Can plain, deterministic rules reliably pull out **company**, **role**, and **stage** — or do we
 need an AI model to read it?
 
@@ -15,11 +15,11 @@ And if rules work: **how much work is each new employer's format?**
 
 ## Why this decides the build
 
-| Approach | Cost | Risk |
-|---|---|---|
-| **Rules only** | Free, instant, deterministic, testable, private | Brittle on unseen formats |
-| **Rules + LLM fallback** | A few cents per unknown email; sends content to a third party | Privacy, latency, new failure mode |
-| **LLM for everything** | Cost scales with every email | The parser becomes a black box we can't unit-test |
+| Approach                 | Cost                                                          | Risk                                              |
+| ------------------------ | ------------------------------------------------------------- | ------------------------------------------------- |
+| **Rules only**           | Free, instant, deterministic, testable, private               | Brittle on unseen formats                         |
+| **Rules + LLM fallback** | A few cents per unknown email; sends content to a third party | Privacy, latency, new failure mode                |
+| **LLM for everything**   | Cost scales with every email                                  | The parser becomes a black box we can't unit-test |
 
 Rules are the default because they are free, private and debuggable. The spike answers whether that
 default survives contact with reality — and if it does not, the LLM decision is forced by evidence
@@ -72,18 +72,18 @@ Report:
 
 ## Decision thresholds (fixed before the result)
 
-| Full-resolution rate on held-out emails | Decision |
-|---|---|
-| **≥ 80%** | Rules only in v1. Everything else goes to Review, as the spec already says |
-| **50–80%** | Rules with an explicit Review queue as the norm — and measure the queue's size, because a review queue that fills daily is just manual entry with extra steps |
-| **< 50%** | Rules are not viable; either add an LLM fallback or narrow the supported formats to one ATS |
+| Full-resolution rate on held-out emails | Decision                                                                                                                                                      |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **≥ 80%**                               | Rules only in v1. Everything else goes to Review, as the spec already says                                                                                    |
+| **50–80%**                              | Rules with an explicit Review queue as the norm — and measure the queue's size, because a review queue that fills daily is just manual entry with extra steps |
+| **< 50%**                               | Rules are not viable; either add an LLM fallback or narrow the supported formats to one ATS                                                                   |
 
 ## Roles
 
-| Who | Does |
-|---|---|
-| **Me** | Draft the corpus, write the throwaway parser, run the measurement, report numbers, delete the code |
-| **User** | Reconstruct up to 5 real emails from memory; sanity-check the synthetic ones; approve the start |
+| Who      | Does                                                                                               |
+| -------- | -------------------------------------------------------------------------------------------------- |
+| **Me**   | Draft the corpus, write the throwaway parser, run the measurement, report numbers, delete the code |
+| **User** | Reconstruct up to 5 real emails from memory; sanity-check the synthetic ones; approve the start    |
 
 ## What would make me abandon this spike
 
@@ -98,11 +98,11 @@ with a real measurement scheduled after the first month of use.
 
 Rules were written against the 5 tune emails only, then scored once against the held-out sets.
 
-| Split | Full resolution | Company | Role | Stage |
-|---|---|---|---|---|
-| Held-out synthetic (5) | 5/5 (100%) | 3/3 | 3/3 | 3/3 |
-| **Held-out real (5)** | **4/5 (80%)** | 5/5 | 4/5 | 5/5 |
-| **Combined** | **9/10 (90%)** | | | |
+| Split                  | Full resolution | Company | Role | Stage |
+| ---------------------- | --------------- | ------- | ---- | ----- |
+| Held-out synthetic (5) | 5/5 (100%)      | 3/3     | 3/3  | 3/3   |
+| **Held-out real (5)**  | **4/5 (80%)**   | 5/5     | 4/5  | 5/5   |
+| **Combined**           | **9/10 (90%)**  |         |      |       |
 
 Single failure: **R2 (LinkedIn acknowledgement)** — the role was not extracted. LinkedIn puts the job
 title on its own line, and the parser collapsed newlines before scanning. A structural bug in my
@@ -112,13 +112,13 @@ code, surfaced by real data — which is what a held-out set is for.
 
 The collapse was fixed (line-aware scanning) and the suite re-run: **10/10 (100%)**.
 
-Reported separately because it is no longer a held-out result — I fixed the code *after* seeing the
+Reported separately because it is no longer a held-out result — I fixed the code _after_ seeing the
 failure. The decision is unaffected (both 90% and 100% clear the ≥80% bar), but the 100% must not be
 quoted as if it were blind.
 
 ### Error shape — better than expected
 
-Across the held-out run there were **no wrong values**, only one *missing* one. That matters more than
+Across the held-out run there were **no wrong values**, only one _missing_ one. That matters more than
 the headline: a missing field is recoverable through the Review queue; a wrong-but-plausible company
 or stage is what silently corrupts the product.
 
@@ -131,7 +131,7 @@ makes a list feel broken.
 
 - The whole parser is ~190 lines of rules for 15 emails.
 - Adding the LinkedIn line format cost one rule discovered by failure, not by design.
-- Estimate: **10–20 minutes per newly-seen ATS family**, and *only after* an email from that family
+- Estimate: **10–20 minutes per newly-seen ATS family**, and _only after_ an email from that family
   has actually arrived and failed. Unknown families are not predicted, they are discovered.
 
 ### Decision
@@ -153,4 +153,3 @@ The Review queue stays — it is what catches the 10% and every unseen format.
 
 **Re-measure with the first month of real forwarded mail** before trusting the number for anything
 beyond "rules are viable".
-

@@ -29,12 +29,12 @@ Only three things, and it is worth separating them:
 
 ## Options
 
-| Option | Strength | Weakness |
-|---|---|---|
-| **A. Dedicated Gmail mailbox + IMAP polling** (recommended) | $0, no domain, works today; per-user routing via plus-addressing (`careeros.inbox+<code>@gmail.com`); same UX for the user as the domain plan; one credential we own, not the user's | Polling latency ≥ 1 min; Gmail app password needs a dedicated account with 2FA; Google could tighten automated access; Gmail forwarding verification email must be completed by us |
-| B. Free subdomain with MX (is-a.dev, pntr.dev, etc.) + inbound webhook | Real push webhooks; verification email can be auto-handled; closest to the original design | Depends on a volunteer-run free subdomain; approval delays; can vanish; more DNS moving parts |
-| C. Drop email capture in v1 — paste the email body | Simplest to build; no credentials, no polling, no ToS questions | Kills the near-zero-effort wedge; user pays the cost on every application; the thing Stage 3 said would make this lose |
-| D. Gmail OAuth | No setup ritual for the user | Restricted-scope verification or 7-day refresh tokens in testing mode; far too heavy for this timeline |
+| Option                                                                 | Strength                                                                                                                                                                             | Weakness                                                                                                                                                                           |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **A. Dedicated Gmail mailbox + IMAP polling** (recommended)            | $0, no domain, works today; per-user routing via plus-addressing (`careeros.inbox+<code>@gmail.com`); same UX for the user as the domain plan; one credential we own, not the user's | Polling latency ≥ 1 min; Gmail app password needs a dedicated account with 2FA; Google could tighten automated access; Gmail forwarding verification email must be completed by us |
+| B. Free subdomain with MX (is-a.dev, pntr.dev, etc.) + inbound webhook | Real push webhooks; verification email can be auto-handled; closest to the original design                                                                                           | Depends on a volunteer-run free subdomain; approval delays; can vanish; more DNS moving parts                                                                                      |
+| C. Drop email capture in v1 — paste the email body                     | Simplest to build; no credentials, no polling, no ToS questions                                                                                                                      | Kills the near-zero-effort wedge; user pays the cost on every application; the thing Stage 3 said would make this lose                                                             |
+| D. Gmail OAuth                                                         | No setup ritual for the user                                                                                                                                                         | Restricted-scope verification or 7-day refresh tokens in testing mode; far too heavy for this timeline                                                                             |
 
 **Recommendation: A.** It preserves the user-facing behaviour, costs nothing, and requires nobody's
 permission. The lost pieces are latency and a pretty address — both recoverable later without
@@ -96,13 +96,13 @@ acknowledgement and sent it as a **new message** from their personal Gmail to
   message does. The conclusion is withdrawn.
 - "original Message-ID lost" is likewise an artefact of composing, not of forwarding.
 
-What the test *does* establish, and still holds:
+What the test _does_ establish, and still holds:
 
-| Measure | Result |
-|---|---|
-| Delivery to a plus-address | **Yes, within ~1 minute** |
-| Plus-code arrives intact in `To` | **Yes** — code `test1` |
-| Body text arrives intact | **Yes** |
+| Measure                          | Result                                                                     |
+| -------------------------------- | -------------------------------------------------------------------------- |
+| Delivery to a plus-address       | **Yes, within ~1 minute**                                                  |
+| Plus-code arrives intact in `To` | **Yes** — code `test1`                                                     |
+| Body text arrives intact         | **Yes**                                                                    |
 | Non-plus mail is distinguishable | **Yes** — Google security alerts carry no plus-code, a clean "ignore" rule |
 
 The remaining question — whether Gmail's **automatic** forwarding preserves the original `From`,
@@ -127,16 +127,16 @@ The fix was a genuine third party — a disposable mailbox at `careerosw3ne0ae1@
 
 Result, from the raw source of the forwarded message:
 
-| Measure | Result |
-|---|---|
-| Delivered | **Yes, ~13 seconds** |
-| Original `From` | **Preserved** — `gammee1018@gmail.com` |
-| Original `Message-ID` | **Preserved exactly** — `<spike-g-cea1575399c1@careeros-test.local>` |
-| Subject | **Preserved**, with **no `Fwd:` prefix** |
-| `To` | **Original recipient** (`gammee1000`) — *not* the forwarding address |
-| Routing key | **`X-Forwarded-To: <destination>`** present, plus a second `Delivered-To:` |
-| Envelope | `Return-Path: gammee1000+caf_=<destination>@gmail.com` |
-| Body | Intact, no added quoting |
+| Measure               | Result                                                                     |
+| --------------------- | -------------------------------------------------------------------------- |
+| Delivered             | **Yes, ~13 seconds**                                                       |
+| Original `From`       | **Preserved** — `gammee1018@gmail.com`                                     |
+| Original `Message-ID` | **Preserved exactly** — `<spike-g-cea1575399c1@careeros-test.local>`       |
+| Subject               | **Preserved**, with **no `Fwd:` prefix**                                   |
+| `To`                  | **Original recipient** (`gammee1000`) — _not_ the forwarding address       |
+| Routing key           | **`X-Forwarded-To: <destination>`** present, plus a second `Delivered-To:` |
+| Envelope              | `Return-Path: gammee1000+caf_=<destination>@gmail.com`                     |
+| Body                  | Intact, no added quoting                                                   |
 
 **The decisive design consequence:** Gmail auto-forwarding **keeps the original `To` header**. If we
 had routed users by the address in `To`, every forward would have been misrouted into a single
@@ -163,6 +163,3 @@ Inbound capture is viable on a free, domainless stack:
 - Verification of a forwarding address requires a human click in a signed-in browser; a scripted
   GET returns HTTP 200 without confirming.
 - A user must accept "forward all matching mail to a third party" — the trust cost of the mechanism.
-
-
-

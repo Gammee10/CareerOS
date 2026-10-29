@@ -7,18 +7,18 @@ The 10-stage workflow is a guide, not a rulebook. One stage at a time.
 
 ## Stage tracker
 
-| Phase | # | Stage | Status | Doc |
-|-------|---|-------|--------|-----|
-| THINK | 1 | Capture the idea | ✅ done | [01-capture-the-idea.md](01-capture-the-idea.md) |
-| THINK | 2 | Frame the problem | ✅ done | [02-frame-the-problem.md](02-frame-the-problem.md) |
-| THINK | 3 | Validate before building | ✅ GO | [03-validate-before-building.md](03-validate-before-building.md) |
-| THINK | 4 | Define scope | ✅ done | [04-define-scope.md](04-define-scope.md) |
-| DESIGN | 5 | Technical discovery | ✅ done (9/9) | [05-technical-discovery.md](05-technical-discovery.md) |
-| DESIGN | 6 | Design | 🟡 D3 approved, D4 next | [06-design/](06-design/README.md) |
-| BUILD | 7 | Foundation | not started | — |
-| BUILD | 8 | Plan the work | not started | — |
-| BUILD | 9 | Feature build loop | not started | — |
-| BUILD | 10 | Quality gates | not started | — |
+| Phase  | #   | Stage                    | Status                  | Doc                                                              |
+| ------ | --- | ------------------------ | ----------------------- | ---------------------------------------------------------------- |
+| THINK  | 1   | Capture the idea         | ✅ done                 | [01-capture-the-idea.md](01-capture-the-idea.md)                 |
+| THINK  | 2   | Frame the problem        | ✅ done                 | [02-frame-the-problem.md](02-frame-the-problem.md)               |
+| THINK  | 3   | Validate before building | ✅ GO                   | [03-validate-before-building.md](03-validate-before-building.md) |
+| THINK  | 4   | Define scope             | ✅ done                 | [04-define-scope.md](04-define-scope.md)                         |
+| DESIGN | 5   | Technical discovery      | ✅ done (9/9)           | [05-technical-discovery.md](05-technical-discovery.md)           |
+| DESIGN | 6   | Design                   | 🟡 D3 approved, D4 next | [06-design/](06-design/README.md)                                |
+| BUILD  | 7   | Foundation               | not started             | —                                                                |
+| BUILD  | 8   | Plan the work            | not started             | —                                                                |
+| BUILD  | 9   | Feature build loop       | not started             | —                                                                |
+| BUILD  | 10  | Quality gates            | not started             | —                                                                |
 
 ## Conventions
 

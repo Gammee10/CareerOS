@@ -29,12 +29,12 @@ Two questions that look unrelated but share one cause:
 
 A simulation over a full year, minute by minute, using a real IANA timezone database:
 
-| Timezone | Why it is in the set |
-|---|---|
-| `Africa/Nairobi` | The actual user — no DST, the baseline |
-| `Europe/London` | Northern DST, Sunday 01:00 shift |
-| `America/New_York` | DST at a different date than London |
-| `Australia/Sydney` | Southern hemisphere — DST in the opposite season |
+| Timezone              | Why it is in the set                                       |
+| --------------------- | ---------------------------------------------------------- |
+| `Africa/Nairobi`      | The actual user — no DST, the baseline                     |
+| `Europe/London`       | Northern DST, Sunday 01:00 shift                           |
+| `America/New_York`    | DST at a different date than London                        |
+| `Australia/Sydney`    | Southern hemisphere — DST in the opposite season           |
 | `Australia/Lord_Howe` | **30-minute** DST shift, the nastiest case in the database |
 
 For each zone: count fires, assert **exactly one per ISO week**, at **08:00 local**, never zero,
@@ -48,12 +48,12 @@ deterministically. Both options get simulated.
 
 Free-tier scheduling is where the marketing and the reality diverge:
 
-| Option | Documented free behaviour | Risk |
-|---|---|---|
-| **Cloudflare Workers cron** | Every minute, free plan, no sleeping | Node-incompatible runtime; IMAP from Workers is painful |
-| **GitHub Actions cron** | Every 5 min minimum, free for public repos | Delays of 5–20 min under load; **disabled after 60 days of repo inactivity** |
-| **Render free web service** | Sleeps after 15 min idle | Ingest poller would break the latency target |
-| **Railway / Fly** | Trial credit, then paid | Not "free" beyond a trial |
+| Option                      | Documented free behaviour                  | Risk                                                                         |
+| --------------------------- | ------------------------------------------ | ---------------------------------------------------------------------------- |
+| **Cloudflare Workers cron** | Every minute, free plan, no sleeping       | Node-incompatible runtime; IMAP from Workers is painful                      |
+| **GitHub Actions cron**     | Every 5 min minimum, free for public repos | Delays of 5–20 min under load; **disabled after 60 days of repo inactivity** |
+| **Render free web service** | Sleeps after 15 min idle                   | Ingest poller would break the latency target                                 |
+| **Railway / Fly**           | Trial credit, then paid                    | Not "free" beyond a trial                                                    |
 
 **Part B needs the user to create a free account**, because nothing can be deployed without
 credentials. If that is not wanted tonight, the honest outcome is to record the documented limits,
@@ -62,18 +62,18 @@ than silently assumed.
 
 ## Decision thresholds
 
-| Result | Decision |
-|---|---|
-| Part A passes in all five zones | Scheduler design is settled; the timezone test becomes a permanent unit test |
-| Part A fails anywhere | Do not build the digest until the scheduling model is redesigned |
-| Part B untested | Record documented limits, choose the least-risky option, and put a hard check in the Stage 7 walking skeleton: **the first deploy must prove a scheduled run actually fires** |
+| Result                          | Decision                                                                                                                                                                      |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Part A passes in all five zones | Scheduler design is settled; the timezone test becomes a permanent unit test                                                                                                  |
+| Part A fails anywhere           | Do not build the digest until the scheduling model is redesigned                                                                                                              |
+| Part B untested                 | Record documented limits, choose the least-risky option, and put a hard check in the Stage 7 walking skeleton: **the first deploy must prove a scheduled run actually fires** |
 
 ## Roles
 
-| Who | Does |
-|---|---|
-| **Me** | Write and run the year-long simulation, report fires per zone, test the catch-up policy, delete the throwaway code |
-| **User** | Decide whether Part B happens now (requires a free account) or is deferred to Stage 7 |
+| Who      | Does                                                                                                               |
+| -------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Me**   | Write and run the year-long simulation, report fires per zone, test the catch-up policy, delete the throwaway code |
+| **User** | Decide whether Part B happens now (requires a free account) or is deferred to Stage 7                              |
 
 ## What this spike will not prove
 
@@ -86,13 +86,13 @@ Minute-by-minute simulation of the whole of 2027 (52 Mondays), five timezones.
 
 ### 1. Healthy process — exactly once per week
 
-| Zone | Weeks | Fires | Fired twice | Missed | Fired late |
-|---|---|---|---|---|---|
-| Africa/Nairobi | 52 | **52** | 0 | 0 | 0 |
-| Europe/London | 52 | **52** | 0 | 0 | 0 |
-| America/New_York | 52 | **52** | 0 | 0 | 0 |
-| Australia/Sydney | 52 | **52** | 0 | 0 | 0 |
-| Australia/Lord_Howe | 52 | **52** | 0 | 0 | 0 |
+| Zone                | Weeks | Fires  | Fired twice | Missed | Fired late |
+| ------------------- | ----- | ------ | ----------- | ------ | ---------- |
+| Africa/Nairobi      | 52    | **52** | 0           | 0      | 0          |
+| Europe/London       | 52    | **52** | 0           | 0      | 0          |
+| America/New_York    | 52    | **52** | 0           | 0      | 0          |
+| Australia/Sydney    | 52    | **52** | 0           | 0      | 0          |
+| Australia/Lord_Howe | 52    | **52** | 0           | 0      | 0          |
 
 Computing the target from local time on every tick is correct through DST, including the 30-minute
 Lord Howe shift.
@@ -101,22 +101,22 @@ Lord Howe shift.
 
 Outage 07:55–08:10 on three weeks:
 
-| Policy | Fires | Weeks missed |
-|---|---|---|
-| Strict (only at exactly 08:00) | 49 | **3** |
-| Catch-up (within 6 h after 08:00) | 52 | 0 |
+| Policy                            | Fires | Weeks missed |
+| --------------------------------- | ----- | ------------ |
+| Strict (only at exactly 08:00)    | 49    | **3**        |
+| Catch-up (within 6 h after 08:00) | 52    | 0            |
 
-A free host *will* be asleep or restarting sometimes. Strict scheduling therefore guarantees lost
+A free host _will_ be asleep or restarting sometimes. Strict scheduling therefore guarantees lost
 digests — and a lost digest is indistinguishable from "nothing to report".
 
 ### 3. Crash right after sending — 357 duplicate emails without a durable record
 
 Process dies 30 seconds after sending, restarts at 08:05:
 
-| State | Fires that week |
-|---|---|
-| Durable "already sent" record | **1** |
-| In-memory flag only | **357** |
+| State                         | Fires that week |
+| ----------------------------- | --------------- |
+| Durable "already sent" record | **1**           |
+| In-memory flag only           | **357**         |
 
 The catch-up window retries every minute, so a lost in-memory flag re-sends on every remaining tick.
 **Requirement: an idempotency key on `(user_id, iso_week)` in the database**, not a variable in
@@ -127,13 +127,13 @@ memory. This is the single most important finding of the spike.
 Schedulers commonly store the UTC offset once at setup. How many weeks would that fire at the wrong
 local time?
 
-| Zone | Fixed offset | Weeks at the wrong local time |
-|---|---|---|
-| Africa/Nairobi | +03:00 | 0 |
-| Europe/London | +00:00 | **31** |
-| America/New_York | −05:00 | **34** |
-| Australia/Sydney | +11:00 | **26** |
-| Australia/Lord_Howe | +11:00 | **26** |
+| Zone                | Fixed offset | Weeks at the wrong local time |
+| ------------------- | ------------ | ----------------------------- |
+| Africa/Nairobi      | +03:00       | 0                             |
+| Europe/London       | +00:00       | **31**                        |
+| America/New_York    | −05:00       | **34**                        |
+| Australia/Sydney    | +11:00       | **26**                        |
+| Australia/Lord_Howe | +11:00       | **26**                        |
 
 ### Design rules this fixes for Stage 6
 
@@ -146,12 +146,12 @@ local time?
 
 The user chose not to create an account tonight. What the documentation says:
 
-| Option | Free behaviour | Fit for this product |
-|---|---|---|
-| Cloudflare Workers cron | Every minute, no sleeping | Runtime cannot do IMAP; would force an HTTP mail API |
-| GitHub Actions cron | 5-minute minimum, delayed under load, **disabled after 60 days of inactivity** | Can run IMAP code; ingest latency 5–10 min |
-| Render free web service | Sleeps after 15 min idle | Breaks a 60-second poller |
-| Railway / Fly | Trial credit, then paid (~$5/month) | The only always-on option considered |
+| Option                  | Free behaviour                                                                 | Fit for this product                                 |
+| ----------------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| Cloudflare Workers cron | Every minute, no sleeping                                                      | Runtime cannot do IMAP; would force an HTTP mail API |
+| GitHub Actions cron     | 5-minute minimum, delayed under load, **disabled after 60 days of inactivity** | Can run IMAP code; ingest latency 5–10 min           |
+| Render free web service | Sleeps after 15 min idle                                                       | Breaks a 60-second poller                            |
+| Railway / Fly           | Trial credit, then paid (~$5/month)                                            | The only always-on option considered                 |
 
 **Finding:** there is **no free tier that gives an always-on process at 60-second granularity.**
 The architecture decided in ADR 0001 (an IMAP poller) needs one, so the realistic choices are
@@ -163,4 +163,3 @@ forgotten.
 
 **Stage 7 requirement:** the walking skeleton must prove a scheduled run actually fired. Documentation
 is not evidence.
-

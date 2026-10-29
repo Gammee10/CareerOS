@@ -18,56 +18,56 @@ If the answer is no, the module is shallow and should be merged.
 
 ### `intake/` — from mailbox to a recorded application
 
-| | |
-|---|---|
-| **Owns tables** | `inbound` (the job queue), `review_items` (things it could not decide) |
-| **Public doors** | `ingest(now)` · `listReview(owner)` · `resolveReview(owner, id, decision)` · `reprocess(owner, inboundId)` |
-| **Hides** | IMAP connection and MIME parsing · the rule engine · confidence scoring · claim/lease/retry/dead-letter · when to send something to Review · retention purge |
-| **Calls** | `ledger.create()` / `ledger.update()` when it is confident |
+|                  |                                                                                                                                                              |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Owns tables**  | `inbound` (the job queue), `review_items` (things it could not decide)                                                                                       |
+| **Public doors** | `ingest(now)` · `listReview(owner)` · `resolveReview(owner, id, decision)` · `reprocess(owner, inboundId)`                                                   |
+| **Hides**        | IMAP connection and MIME parsing · the rule engine · confidence scoring · claim/lease/retry/dead-letter · when to send something to Review · retention purge |
+| **Calls**        | `ledger.create()` / `ledger.update()` when it is confident                                                                                                   |
 
 `ingest()` also expires old raw emails at the end of each cycle. That is deliberate: one door keeps
 the inbox current — fetch, parse, expire — and it avoids a fifth door for housekeeping.
 
 ### `ledger/` — the applications and their history
 
-| | |
-|---|---|
-| **Owns tables** | `applications`, `events` |
+|                  |                                                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Owns tables**  | `applications`, `events`                                                                                           |
 | **Public doors** | `create(owner, input)` · `update(owner, id, patch)` · `get(owner, id)` (includes timeline) · `list(owner, filter)` |
-| **Hides** | The schema · event writing on every mutation · allowed status transitions · duplicate detection |
-| **Calls** | nothing |
+| **Hides**        | The schema · event writing on every mutation · allowed status transitions · duplicate detection                    |
+| **Calls**        | nothing                                                                                                            |
 
 `ledger` is the only module that touches `applications`. If the digest, the due list, or a future
 analytics page needs applications, it asks `ledger`.
 
 ### `planning/` — what is owed next
 
-| | |
-|---|---|
-| **Owns tables** | `due_items` (dates extracted from mail, silence prompts, and the user's done/snooze/dismiss state) |
-| **Public doors** | `listDue(owner, now)` · `complete(owner, id)` · `snooze(owner, id, until)` · `sync(owner, now)` |
-| **Hides** | The silence rule · local-time arithmetic · catch-up windows · how generated items are kept from duplicating |
-| **Calls** | `ledger` (reads applications to know what is quiet) |
+|                  |                                                                                                             |
+| ---------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Owns tables**  | `due_items` (dates extracted from mail, silence prompts, and the user's done/snooze/dismiss state)          |
+| **Public doors** | `listDue(owner, now)` · `complete(owner, id)` · `snooze(owner, id, until)` · `sync(owner, now)`             |
+| **Hides**        | The silence rule · local-time arithmetic · catch-up windows · how generated items are kept from duplicating |
+| **Calls**        | `ledger` (reads applications to know what is quiet)                                                         |
 
 ### `delivery/` — the Monday email
 
-| | |
-|---|---|
-| **Owns tables** | `digests` — unique on `(owner, iso_year, iso_week)` |
-| **Public doors** | `sendIfDue(owner, now)` · `preview(owner)` |
-| **Hides** | Eligibility (Monday 08:00 local, 6-hour catch-up) · composition · SMTP · retry policy |
-| **Calls** | `planning.listDue()` |
+|                  |                                                                                       |
+| ---------------- | ------------------------------------------------------------------------------------- |
+| **Owns tables**  | `digests` — unique on `(owner, iso_year, iso_week)`                                   |
+| **Public doors** | `sendIfDue(owner, now)` · `preview(owner)`                                            |
+| **Hides**        | Eligibility (Monday 08:00 local, 6-hour catch-up) · composition · SMTP · retry policy |
+| **Calls**        | `planning.listDue()`                                                                  |
 
 ---
 
 ## 2. Allowed arrows
 
 | From ↓ / To → | intake | ledger | planning | delivery |
-|---|---|---|---|---|
-| **intake** | — | ✅ | | |
-| **ledger** | | — | | |
-| **planning** | | ✅ | — | |
-| **delivery** | | | ✅ | — |
+| ------------- | ------ | ------ | -------- | -------- |
+| **intake**    | —      | ✅     |          |          |
+| **ledger**    |        | —      |          |          |
+| **planning**  |        | ✅     | —        |          |
+| **delivery**  |        |        | ✅       | —        |
 
 **No cycles. No skipping.** `delivery` cannot call `ledger` even though it would be convenient — it
 asks `planning`, which asks `ledger`. That is the price of a single direction, and it is cheap here
@@ -81,18 +81,18 @@ is deliberately not a folder.
 
 ## 3. One rule, one place
 
-| Rule | Owner | Enforced at |
-|---|---|---|
-| Company / role / stage extraction | intake | code + golden-corpus tests |
-| Confidence threshold for review | intake | code |
-| A message becomes at most one application | intake | unique `inbound.message_id` |
-| Allowed status transitions | ledger | code + database check |
-| Every mutation writes an event | ledger | one transaction |
-| A user sees only their rows | every module | database RLS, `owner_id = auth.uid()` |
-| Silence prompt after 10 quiet days | planning | code + unique key |
-| Digest eligibility and catch-up | delivery | code |
-| One digest per user per week | delivery | unique `(owner, iso_year, iso_week)` |
-| Raw email 7 days, snippet 30 days | intake | scheduled purge inside `ingest()` |
+| Rule                                      | Owner        | Enforced at                           |
+| ----------------------------------------- | ------------ | ------------------------------------- |
+| Company / role / stage extraction         | intake       | code + golden-corpus tests            |
+| Confidence threshold for review           | intake       | code                                  |
+| A message becomes at most one application | intake       | unique `inbound.message_id`           |
+| Allowed status transitions                | ledger       | code + database check                 |
+| Every mutation writes an event            | ledger       | one transaction                       |
+| A user sees only their rows               | every module | database RLS, `owner_id = auth.uid()` |
+| Silence prompt after 10 quiet days        | planning     | code + unique key                     |
+| Digest eligibility and catch-up           | delivery     | code                                  |
+| One digest per user per week              | delivery     | unique `(owner, iso_year, iso_week)`  |
+| Raw email 7 days, snippet 30 days         | intake       | scheduled purge inside `ingest()`     |
 
 **Duplicated rules are the smell.** If a rule appears in a second module, one of them is wrong — the
 second should call the first.
@@ -127,13 +127,13 @@ them as clean subfolders now is what makes that a day's work later instead of a 
 
 ## 5. Smells, and which become machine checks
 
-| Smell | Check (built in D8) |
-|---|---|
-| Two modules write the same table | dependency test: table access only through its owning module |
-| A module imports another's `db/` or schema | import-boundary test |
-| An arrow that should not exist | import graph must match the matrix above |
-| A rule copied into a second module | review checklist — the one thing a machine cannot find |
-| A `utils/` folder everyone imports | forbid a shared dumping ground; shared helpers live with their owner |
+| Smell                                      | Check (built in D8)                                                  |
+| ------------------------------------------ | -------------------------------------------------------------------- |
+| Two modules write the same table           | dependency test: table access only through its owning module         |
+| A module imports another's `db/` or schema | import-boundary test                                                 |
+| An arrow that should not exist             | import graph must match the matrix above                             |
+| A rule copied into a second module         | review checklist — the one thing a machine cannot find               |
+| A `utils/` folder everyone imports         | forbid a shared dumping ground; shared helpers live with their owner |
 
 ---
 

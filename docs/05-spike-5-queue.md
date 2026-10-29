@@ -18,13 +18,13 @@ Redis, no SQS, no broker?
 
 Stage 4 already promised four things that a naive implementation breaks:
 
-| Requirement | What breaks it |
-|---|---|
-| Raw message persisted **before** parsing | Parsing inline on arrival; a crash loses the mail |
-| Retries with backoff | A parser bug retried forever in a tight loop |
-| Dead-letter after N attempts | One poisonous email blocks the queue forever |
-| **No duplicate application** | Two workers, or a redelivery, both insert |
-| Parser down ⇒ rows show "pending" | A missing row is silently rendered as "nothing due" — a lie |
+| Requirement                              | What breaks it                                              |
+| ---------------------------------------- | ----------------------------------------------------------- |
+| Raw message persisted **before** parsing | Parsing inline on arrival; a crash loses the mail           |
+| Retries with backoff                     | A parser bug retried forever in a tight loop                |
+| Dead-letter after N attempts             | One poisonous email blocks the queue forever                |
+| **No duplicate application**             | Two workers, or a redelivery, both insert                   |
+| Parser down ⇒ rows show "pending"        | A missing row is silently rendered as "nothing due" — a lie |
 
 The last one is the dangerous one: for a reminder product, **silence caused by a bug looks exactly
 like silence caused by no deadlines.**
@@ -35,13 +35,13 @@ like silence caused by no deadlines.**
 
 SQLite, the only database available without an account. Five failure-mode tests:
 
-| # | Test | Pass looks like |
-|---|---|---|
-| T1 | Same `Message-ID` enqueued 10×, 4 workers | exactly **1** application |
-| T2 | 50 messages, 4 concurrent workers | **50** processed, 0 duplicates, 0 lost |
-| T3 | Worker killed mid-message, lease expires | message reclaimed, processed once, `attempts = 2` |
-| T4 | Parser always throws | 3 attempts, then **dead-letter**; nothing silently disappears |
-| T5 | Backoff respected | no retry before `next_attempt_at` |
+| #   | Test                                      | Pass looks like                                               |
+| --- | ----------------------------------------- | ------------------------------------------------------------- |
+| T1  | Same `Message-ID` enqueued 10×, 4 workers | exactly **1** application                                     |
+| T2  | 50 messages, 4 concurrent workers         | **50** processed, 0 duplicates, 0 lost                        |
+| T3  | Worker killed mid-message, lease expires  | message reclaimed, processed once, `attempts = 2`             |
+| T4  | Parser always throws                      | 3 attempts, then **dead-letter**; nothing silently disappears |
+| T5  | Backoff respected                         | no retry before `next_attempt_at`                             |
 
 Proposed mechanics: one table with `status` (`pending` / `processing` / `done` / `dead`),
 `attempts`, `next_attempt_at`, `lease_until`, and a **unique index on `message_id`**. Claims happen
@@ -62,18 +62,18 @@ skeleton must include a concurrency test against the real database before the qu
 
 ## Decision thresholds
 
-| Result | Decision |
-|---|---|
-| Part A passes all five | One table is sufficient by design; no external queue in v1 |
-| Any duplicate or lost message | The design is wrong before we build it — stop and redesign |
-| Part B deferred | Recorded as a Stage 7 gate, with the exact test written down |
+| Result                        | Decision                                                     |
+| ----------------------------- | ------------------------------------------------------------ |
+| Part A passes all five        | One table is sufficient by design; no external queue in v1   |
+| Any duplicate or lost message | The design is wrong before we build it — stop and redesign   |
+| Part B deferred               | Recorded as a Stage 7 gate, with the exact test written down |
 
 ## Roles
 
-| Who | Does |
-|---|---|
-| **Me** | Build the throwaway queue, run the five failure tests, report numbers, delete the code |
-| **User** | Decide whether Part B (a real Postgres account) happens now or is deferred again |
+| Who      | Does                                                                                   |
+| -------- | -------------------------------------------------------------------------------------- |
+| **Me**   | Build the throwaway queue, run the five failure tests, report numbers, delete the code |
+| **User** | Decide whether Part B (a real Postgres account) happens now or is deferred again       |
 
 ## What I expect to fail first
 
@@ -87,20 +87,20 @@ problem, and it is why the queue deserves a spike rather than a guess.
 Tested against a real Supabase Postgres project, four worker threads, `FOR UPDATE SKIP LOCKED`
 claims, a 3-second lease, and three attempts before dead-letter.
 
-| # | Test | Result |
-|---|---|---|
-| T1 | Same `Message-ID` enqueued 10× | **1 application**, 1 inbound row |
-| T2 | 50 messages, 4 concurrent workers | **50 done, 0 duplicates, 0 lost**, 1.37 msg/s |
-| T3 | Worker killed mid-message | reclaimed after lease expiry, `attempts = 2`, **1 application** |
-| T4 | Permanently poisonous message | 3 attempts, then **dead**, 0 applications, **nothing stuck** |
-| T5 | Backoff | first retry immediate (policy), second waits ~2 s, **not picked early** |
-| T6 | Worker *slow*, not dead — lease expires mid-work | two workers completed it, **still 1 application** |
+| #   | Test                                             | Result                                                                  |
+| --- | ------------------------------------------------ | ----------------------------------------------------------------------- |
+| T1  | Same `Message-ID` enqueued 10×                   | **1 application**, 1 inbound row                                        |
+| T2  | 50 messages, 4 concurrent workers                | **50 done, 0 duplicates, 0 lost**, 1.37 msg/s                           |
+| T3  | Worker killed mid-message                        | reclaimed after lease expiry, `attempts = 2`, **1 application**         |
+| T4  | Permanently poisonous message                    | 3 attempts, then **dead**, 0 applications, **nothing stuck**            |
+| T5  | Backoff                                          | first retry immediate (policy), second waits ~2 s, **not picked early** |
+| T6  | Worker _slow_, not dead — lease expires mid-work | two workers completed it, **still 1 application**                       |
 
 ### What this actually proves
 
 **The lease is not the safety net. The unique index is.**
 
-T6 is the important one. A worker whose lease expired while it was still alive *did* have its message
+T6 is the important one. A worker whose lease expired while it was still alive _did_ have its message
 reclaimed by a second worker, and both called `complete()`. The application count stayed at one
 because `applications.message_id` is unique and the insert uses `ON CONFLICT DO NOTHING`.
 
@@ -137,4 +137,3 @@ narrower: **run the worker in the same region as the database**, or pay that lat
 - Four threads in one process on one machine. No network partitions, no region failover.
 - Free-tier connection limits were not stressed.
 - The test schema was created by the spike script; the real migration belongs in Stage 7.
-

@@ -7,16 +7,16 @@ starting position — if that changes, this page changes with it.
 
 ## What we store
 
-| Data | Where | Why | Retention |
-|---|---|---|---|
-| Email address | Supabase Auth | Login | Until account deletion |
-| Timezone (IANA) | Postgres | Digest timing | Until account deletion |
-| Applications: company, role, stage, dates, notes | Postgres | The product | Until deleted by user |
-| Status-change events | Postgres | History, analytics later | Until deleted by user |
-| Raw forwarded email | Postgres | Debug and re-parse | **7 days**, then body deleted |
-| Per-email snippet (500 chars) | Postgres | Context in the UI | **30 days** |
-| Latest snippet per application | Postgres | What the user sees | While the application exists |
-| IMAP/SMTP credential | Vercel env only | Read the mailbox, send the digest | Not in the database, never in the repo |
+| Data                                             | Where           | Why                               | Retention                              |
+| ------------------------------------------------ | --------------- | --------------------------------- | -------------------------------------- |
+| Email address                                    | Supabase Auth   | Login                             | Until account deletion                 |
+| Timezone (IANA)                                  | Postgres        | Digest timing                     | Until account deletion                 |
+| Applications: company, role, stage, dates, notes | Postgres        | The product                       | Until deleted by user                  |
+| Status-change events                             | Postgres        | History, analytics later          | Until deleted by user                  |
+| Raw forwarded email                              | Postgres        | Debug and re-parse                | **7 days**, then body deleted          |
+| Per-email snippet (500 chars)                    | Postgres        | Context in the UI                 | **30 days**                            |
+| Latest snippet per application                   | Postgres        | What the user sees                | While the application exists           |
+| IMAP/SMTP credential                             | Vercel env only | Read the mailbox, send the digest | Not in the database, never in the repo |
 
 **The uncomfortable part:** forwarded emails contain **other people's personal data** — recruiters'
 names, interviewers' email addresses, sometimes salary details. We do not choose to collect it; it
@@ -25,12 +25,12 @@ only thereafter.
 
 ## Who processes what
 
-| Processor | Sees | Terms risk |
-|---|---|---|
-| **Google (Gmail)** | Every forwarded email, in full, already | Automation via app password is permitted for the account owner, but Google may act on accounts it considers abusive |
-| **Supabase** | The database, including the 7-day raw emails | Standard DPA; free tier has no backups |
-| **Vercel** | Request logs; the app runs there | Hobby is **personal, non-commercial** only |
-| **cron-job.org** | Only the ingest URL and a shared secret | Free, no SLA, no data |
+| Processor          | Sees                                         | Terms risk                                                                                                          |
+| ------------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Google (Gmail)** | Every forwarded email, in full, already      | Automation via app password is permitted for the account owner, but Google may act on accounts it considers abusive |
+| **Supabase**       | The database, including the 7-day raw emails | Standard DPA; free tier has no backups                                                                              |
+| **Vercel**         | Request logs; the app runs there             | Hobby is **personal, non-commercial** only                                                                          |
+| **cron-job.org**   | Only the ingest URL and a shared secret      | Free, no SLA, no data                                                                                               |
 
 Nothing is sent to an LLM (ADR 0004), which removes the largest and most casual privacy risk most
 products of this type carry.

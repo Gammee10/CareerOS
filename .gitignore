@@ -7,13 +7,18 @@
 
 # Dependencies
 node_modules/
+node_modules.*
 .pnpm-store/
+.pnpm-cache/
+.pnpm-home/
+coverage/
 
 # Build output
 dist/
 build/
 .next/
 out/
+.vercel/
 
 # Logs and local junk
 *.log

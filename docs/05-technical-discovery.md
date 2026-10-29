@@ -25,24 +25,24 @@ everything else is bought or borrowed.
 
 ### Steps
 
-| # | Step | Status | Doc |
-|---|---|---|---|
-| 1 | List the unknowns | ✅ approved | [05-step-1-unknowns.md](05-step-1-unknowns.md) |
-| 2 | Run time-boxed spikes | ✅ 5 spikes done | [05-spike-1-email-corpus.md](05-spike-1-email-corpus.md) |
-| 3 | Build, buy, or borrow | ✅ approved — $0 stack | [05-step-3-build-buy-borrow.md](05-step-3-build-buy-borrow.md) |
-| 4 | Choose the stack | ✅ approved | [05-step-4-stack.md](05-step-4-stack.md) |
-| 5 | Record ADRs | ✅ 0001–0007 | [adr/](adr/) |
-| 6 | Running costs per month | ✅ $0 | [05-step-6-costs.md](05-step-6-costs.md) |
-| 7 | Legal and privacy | ✅ controls listed | [05-step-7-legal-privacy.md](05-step-7-legal-privacy.md) |
-| 8 | Architecture drivers (Template R) | ✅ 15 targets | [05-step-8-drivers.md](05-step-8-drivers.md) |
-| 9 | Architecture-risk spike | ✅ 1.7 s in-region | [05-step-9-architecture-spike.md](05-step-9-architecture-spike.md) |
+| #   | Step                              | Status                 | Doc                                                                |
+| --- | --------------------------------- | ---------------------- | ------------------------------------------------------------------ |
+| 1   | List the unknowns                 | ✅ approved            | [05-step-1-unknowns.md](05-step-1-unknowns.md)                     |
+| 2   | Run time-boxed spikes             | ✅ 5 spikes done       | [05-spike-1-email-corpus.md](05-spike-1-email-corpus.md)           |
+| 3   | Build, buy, or borrow             | ✅ approved — $0 stack | [05-step-3-build-buy-borrow.md](05-step-3-build-buy-borrow.md)     |
+| 4   | Choose the stack                  | ✅ approved            | [05-step-4-stack.md](05-step-4-stack.md)                           |
+| 5   | Record ADRs                       | ✅ 0001–0007           | [adr/](adr/)                                                       |
+| 6   | Running costs per month           | ✅ $0                  | [05-step-6-costs.md](05-step-6-costs.md)                           |
+| 7   | Legal and privacy                 | ✅ controls listed     | [05-step-7-legal-privacy.md](05-step-7-legal-privacy.md)           |
+| 8   | Architecture drivers (Template R) | ✅ 15 targets          | [05-step-8-drivers.md](05-step-8-drivers.md)                       |
+| 9   | Architecture-risk spike           | ✅ 1.7 s in-region     | [05-step-9-architecture-spike.md](05-step-9-architecture-spike.md) |
 
 ### Spikes
 
-| # | Question | Box | Status |
-|---|---|---|---|
-| 1 | Do real application emails carry a date or next action? (U1/U2) | 1 h | ✅ answered — 26.7%, band 2 |
-| 2 | Can a free-tier stack receive inbound email end to end? (U4) | 1 day | ✅ **PASS** — route on `X-Forwarded-To` |
-| 3 | Rule-based parser precision on the real corpus (U3) | 1 day | ✅ rules only — 90% frozen |
-| 4 | Scheduled job at local 08:00 + cold-start latency (U5/U6) | 1 day | ✅ Part A pass; host deferred |
-| 5 | DB-backed queue on the free tier (U7) | 0.5 day | ✅ **6/6 passed** on real Postgres |
+| #   | Question                                                        | Box     | Status                                  |
+| --- | --------------------------------------------------------------- | ------- | --------------------------------------- |
+| 1   | Do real application emails carry a date or next action? (U1/U2) | 1 h     | ✅ answered — 26.7%, band 2             |
+| 2   | Can a free-tier stack receive inbound email end to end? (U4)    | 1 day   | ✅ **PASS** — route on `X-Forwarded-To` |
+| 3   | Rule-based parser precision on the real corpus (U3)             | 1 day   | ✅ rules only — 90% frozen              |
+| 4   | Scheduled job at local 08:00 + cold-start latency (U5/U6)       | 1 day   | ✅ Part A pass; host deferred           |
+| 5   | DB-backed queue on the free tier (U7)                           | 0.5 day | ✅ **6/6 passed** on real Postgres      |

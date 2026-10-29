@@ -31,31 +31,31 @@ For each email, four facts:
 
 ### Data table
 
-| # | Sender / ATS | Type | Date? | Ask? | Notes |
-|---|---|---|---|---|---|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
-| 6 | | | | | |
-| 7 | | | | | |
-| 8 | | | | | |
-| 9 | | | | | |
-| 10 | | | | | |
-| 11 | | | | | |
-| 12 | | | | | |
-| 13 | | | | | |
-| 14 | | | | | |
-| 15 | | | | | |
+| #   | Sender / ATS | Type | Date? | Ask? | Notes |
+| --- | ------------ | ---- | ----- | ---- | ----- |
+| 1   |              |      |       |      |       |
+| 2   |              |      |       |      |       |
+| 3   |              |      |       |      |       |
+| 4   |              |      |       |      |       |
+| 5   |              |      |       |      |       |
+| 6   |              |      |       |      |       |
+| 7   |              |      |       |      |       |
+| 8   |              |      |       |      |       |
+| 9   |              |      |       |      |       |
+| 10  |              |      |       |      |       |
+| 11  |              |      |       |      |       |
+| 12  |              |      |       |      |       |
+| 13  |              |      |       |      |       |
+| 14  |              |      |       |      |       |
+| 15  |              |      |       |      |       |
 
 ## Thresholds (set before looking at the data)
 
-| Share of emails with a date or an ask | Reading | Consequence |
-|---|---|---|
-| **≥ 50%** | The due-list wedge holds on extraction alone | Spec stands; due list is built from email content |
-| **20–50%** | The wedge holds but extraction is not enough on its own | Add **silence detection** (no reply in N days → prompt a follow-up) as a second, independent source of due items |
-| **< 20%** | Emails are pure information | The product changes shape: "the few emails that matter, surfaced fast" plus generated follow-up prompts. Spec revision required before Stage 6 |
+| Share of emails with a date or an ask | Reading                                                 | Consequence                                                                                                                                    |
+| ------------------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **≥ 50%**                             | The due-list wedge holds on extraction alone            | Spec stands; due list is built from email content                                                                                              |
+| **20–50%**                            | The wedge holds but extraction is not enough on its own | Add **silence detection** (no reply in N days → prompt a follow-up) as a second, independent source of due items                               |
+| **< 20%**                             | Emails are pure information                             | The product changes shape: "the few emails that matter, surfaced fast" plus generated follow-up prompts. Spec revision required before Stage 6 |
 
 Setting these first is deliberate: it stops us from looking at fifteen emails and deciding the answer
 was whatever we hoped for.
@@ -70,14 +70,14 @@ Both feed Spike 3 (parser shape) and tell us whether an ICS/JSON-LD shortcut exi
 
 ## Result
 
-| Measure | Value |
-|---|---|
-| Emails counted | 15 |
-| With a date | 3 (rows 9, 10, 12) |
-| With an ask | 3 (rows 9, 10, 11) |
-| With **either** | **4 (rows 9, 10, 11, 12)** |
-| Share with signal | **26.7%** |
-| Band | **20–50%** — "wedge holds, extraction alone is not enough" |
+| Measure           | Value                                                      |
+| ----------------- | ---------------------------------------------------------- |
+| Emails counted    | 15                                                         |
+| With a date       | 3 (rows 9, 10, 12)                                         |
+| With an ask       | 3 (rows 9, 10, 11)                                         |
+| With **either**   | **4 (rows 9, 10, 11, 12)**                                 |
+| Share with signal | **26.7%**                                                  |
+| Band              | **20–50%** — "wedge holds, extraction alone is not enough" |
 
 Row-level detail (sender, ATS, type) was not captured — a gap to close if the types turn out to
 be concentrated.
@@ -102,9 +102,9 @@ exactly the applications that need chasing.
 
 ### Spec amendment required (Stage 4)
 
-- **New story — S9 (Must):** *Given an application whose last email was an acknowledgement and
+- **New story — S9 (Must):** _Given an application whose last email was an acknowledgement and
   which has had no activity for 10 calendar days, when the due list is generated, then it appears
-  as "follow up" and the prompt is shown only once per application.*
+  as "follow up" and the prompt is shown only once per application._
 - It must be dismissible ("not chasing this one"), or it becomes nagging — the failure mode that
   kills reminder products.
 - It only applies after an acknowledgement, never after a rejection or an offer.
@@ -115,4 +115,3 @@ exactly the applications that need chasing.
 
 Distinct templates and any machine-readable structure (ICS, JSON-LD) were not reported. Both feed
 Spike 3. Not blocking.
-

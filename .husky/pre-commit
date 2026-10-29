@@ -1,0 +1,8 @@
+#!/bin/sh
+# Fast checks on staged files only. The full `pnpm verify` runs in CI.
+# If pnpm is not on PATH (fresh clone, unusual environment), skip rather than block every commit.
+if ! command -v pnpm >/dev/null 2>&1; then
+  echo "pnpm not found on PATH — skipping lint-staged. Run 'pnpm verify' before pushing."
+  exit 0
+fi
+pnpm lint-staged

@@ -7,15 +7,15 @@ concurrency and retention come in D4.2–D4.7.
 
 ## 1. The seven tables
 
-| Table | Owner module | Holds | Why it exists |
-|---|---|---|---|
-| `profiles` | (platform) | One row per user: timezone | `auth.users` is Supabase's; we need a timezone and a place to grow |
-| `applications` | ledger | The applications themselves | The thing the product is about |
-| `events` | ledger | Append-only history of every change | Timeline now, analytics later (ADR 0007) |
-| `inbound` | intake | One row per forwarded email: raw text, parse result, queue state, review state | The queue **and** the audit trail of what arrived |
-| `due_items` | planning | Things owed, both extracted and generated | Snooze/done state has to live somewhere |
-| `digests` | delivery | One row per sent weekly email | The idempotency key that prevents double sends |
-| *(none)* | — | — | No `review_items` — see decision 1 below |
+| Table          | Owner module | Holds                                                                          | Why it exists                                                      |
+| -------------- | ------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `profiles`     | (platform)   | One row per user: timezone                                                     | `auth.users` is Supabase's; we need a timezone and a place to grow |
+| `applications` | ledger       | The applications themselves                                                    | The thing the product is about                                     |
+| `events`       | ledger       | Append-only history of every change                                            | Timeline now, analytics later (ADR 0007)                           |
+| `inbound`      | intake       | One row per forwarded email: raw text, parse result, queue state, review state | The queue **and** the audit trail of what arrived                  |
+| `due_items`    | planning     | Things owed, both extracted and generated                                      | Snooze/done state has to live somewhere                            |
+| `digests`      | delivery     | One row per sent weekly email                                                  | The idempotency key that prevents double sends                     |
+| _(none)_       | —            | —                                                                              | No `review_items` — see decision 1 below                           |
 
 ## 2. Relationships
 
@@ -138,23 +138,23 @@ and every policy is `owner_id = auth.uid()`.
 
 ### Decision 1 — Is "Review" its own table?
 
-| Option | Strength | Weakness |
-|---|---|---|
-| **A. A status on `inbound`** (chosen) | One table, no join, no second lifecycle to keep in sync. Review *is* an email awaiting a decision | A review item inherits the email's 7-day purge; once the raw body is gone, the review shows only the snippet |
-| B. A separate `review_items` table | Survives the purge; can hold richer fields | A second lifecycle to keep consistent with `inbound`; a join on every Review screen; two tables that can disagree |
+| Option                                | Strength                                                                                          | Weakness                                                                                                          |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **A. A status on `inbound`** (chosen) | One table, no join, no second lifecycle to keep in sync. Review _is_ an email awaiting a decision | A review item inherits the email's 7-day purge; once the raw body is gone, the review shows only the snippet      |
+| B. A separate `review_items` table    | Survives the purge; can hold richer fields                                                        | A second lifecycle to keep consistent with `inbound`; a join on every Review screen; two tables that can disagree |
 
 **Recommendation: A.** Same data, one lifecycle. The purge concern is real but small — a review item
 unresolved after 7 days is a signal that the queue is failing, and D1.6's freshness signal covers it.
 
 ### Decision 2 — How is a duplicate application prevented?
 
-| Option | Strength | Weakness |
-|---|---|---|
-| **A. `dedupe_key` column + code** (chosen) | Allows the "warn but allow anyway" behaviour from S6; one index for lookup | Not a hard guarantee — two emails parsed differently could create two rows |
-| B. Unique index on `(owner_id, dedupe_key)` | Database-enforced | Makes "allow anyway" impossible without a nonsense suffix; a legitimate second application to the same company becomes a migration problem |
+| Option                                      | Strength                                                                   | Weakness                                                                                                                                   |
+| ------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **A. `dedupe_key` column + code** (chosen)  | Allows the "warn but allow anyway" behaviour from S6; one index for lookup | Not a hard guarantee — two emails parsed differently could create two rows                                                                 |
+| B. Unique index on `(owner_id, dedupe_key)` | Database-enforced                                                          | Makes "allow anyway" impossible without a nonsense suffix; a legitimate second application to the same company becomes a migration problem |
 
 **Recommendation: A**, with the weakness stated plainly: the guarantee is **code plus tests**, not the
-database. The *hard* guarantee stays where it belongs — `inbound.message_id` is unique, so one email
+database. The _hard_ guarantee stays where it belongs — `inbound.message_id` is unique, so one email
 can never create two applications.
 
 ### Decision 3 — Identifier types
@@ -167,11 +167,11 @@ read in order.
 
 ## 5. What D4.1 leaves open (deliberately)
 
-| Question | Answered in |
-|---|---|
-| What states may each thing be in, and what moves are allowed? | D4.2 |
-| What must never be true, and where is it enforced? | D4.3 |
-| Which facts are derived, and how are they rebuilt? | D4.4 |
-| What if two events race? | D4.5 |
-| What must change in one transaction? | D4.6 |
-| How long is each field kept, and how is it deleted? | D4.7 |
+| Question                                                      | Answered in |
+| ------------------------------------------------------------- | ----------- |
+| What states may each thing be in, and what moves are allowed? | D4.2        |
+| What must never be true, and where is it enforced?            | D4.3        |
+| Which facts are derived, and how are they rebuilt?            | D4.4        |
+| What if two events race?                                      | D4.5        |
+| What must change in one transaction?                          | D4.6        |
+| How long is each field kept, and how is it deleted?           | D4.7        |

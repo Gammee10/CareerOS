@@ -50,24 +50,39 @@ src/         application code                        (arrives with the walking s
 scripts/     migrations and operator tools           (arrives with the walking skeleton)
 ```
 
+## Requirements
+
+- **Node 22+** (see `.nvmrc`)
+- **pnpm 11** — `corepack enable` is the simplest way to get the right version
+- Windows note: this repo sets `nodeLinker: hoisted` in `pnpm-workspace.yaml`. pnpm's default
+  junction-based layout is unreadable to Node's module resolver in sandboxed or synchronised
+  folders (OneDrive), which breaks nested dependencies. Hoisted uses real directories instead.
+
 ## Commands
 
-**Not available yet.** They arrive with the tooling step:
+```
+pnpm install        # install dependencies
+pnpm typecheck      # tsc --noEmit
+pnpm lint           # eslint, zero warnings allowed
+pnpm format         # prettier --write
+pnpm test           # unit tests (vitest)
+pnpm verify         # all of the above, in order — run this before pushing
+```
+
+Pre-commit hooks run `lint-staged` on the staged files only. Enable them once with:
 
 ```
-pnpm dev      # local development server
-pnpm test     # unit + integration tests
-pnpm lint     # lint and type check
+pnpm hooks          # git config core.hooksPath .husky
 ```
 
 ## Constraints (deliberate)
 
-| Constraint | Why |
-|---|---|
-| **$0 hosting** | Vercel Hobby + Supabase Free; the architecture was chosen to fit |
-| **No always-on server** | Serverless functions plus a free scheduler |
-| **No LLM** | Rules are testable, private, and free; unclear mail goes to Review |
-| **One user** | Multi-user is a column (`owner_id`) away, not a redesign |
+| Constraint              | Why                                                                |
+| ----------------------- | ------------------------------------------------------------------ |
+| **$0 hosting**          | Vercel Hobby + Supabase Free; the architecture was chosen to fit   |
+| **No always-on server** | Serverless functions plus a free scheduler                         |
+| **No LLM**              | Rules are testable, private, and free; unclear mail goes to Review |
+| **One user**            | Multi-user is a column (`owner_id`) away, not a redesign           |
 
 ## Not in v1
 

@@ -5,8 +5,8 @@
 
 ## Context
 
-The digest is the only channel that brings the user back, and D1.2 says *exactly one per user per ISO
-week*. Between "we decided to send" and "we know it was sent" there is a window. A crash inside that
+The digest is the only channel that brings the user back, and D1.2 says _exactly one per user per ISO
+week_. Between "we decided to send" and "we know it was sent" there is a window. A crash inside that
 window forces a choice, and no implementation can avoid the choice — it can only pick a side.
 
 ## Decision
@@ -23,7 +23,7 @@ window forces a choice, and no implementation can avoid the choice — it can on
 
 - **Worst case: one duplicate email, once, after a crash.** Never a loop, never a silently missing
   digest.
-- The database unique key `(owner_id, iso_year, iso_week)` still guarantees one *row* per week; the
+- The database unique key `(owner_id, iso_year, iso_week)` still guarantees one _row_ per week; the
   duplicate is a second send attempt, not a second row.
 - The "exactly one" wording in the drivers is amended in spirit: **exactly one in normal operation,
   at most two after a crash**.

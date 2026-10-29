@@ -19,9 +19,9 @@ Anything they cannot resolve goes to the **Review queue** rather than being gues
 
 ## Evidence
 
-- 90% of held-out emails fully resolved (80% on the owner's real emails); zero *wrong* values, one
+- 90% of held-out emails fully resolved (80% on the owner's real emails); zero _wrong_ values, one
   missing.
-- Every failure was a *missing* field, which the Review queue recovers — not a wrong value, which
+- Every failure was a _missing_ field, which the Review queue recovers — not a wrong value, which
   silently corrupts.
 - Adding a new sender family costs 10–20 minutes, discovered when its first real email fails.
 
@@ -35,5 +35,5 @@ Anything they cannot resolve goes to the **Review queue** rather than being gues
 ## Revisit when
 
 The Review queue stays unresolved for more than 10% of ingested mail over a month (the Stage 4
-guardrail). At that point an LLM fallback for *only* the unresolved items is the upgrade path — the
+guardrail). At that point an LLM fallback for _only_ the unresolved items is the upgrade path — the
 queue is already the seam that makes it additive.

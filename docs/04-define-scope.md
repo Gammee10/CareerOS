@@ -22,12 +22,12 @@ One person running their own search. No teams, no advisers, no sharing.
 **How applications get into the system.** This is the wedge — if capture costs typing, the
 product is "organised email" and loses.
 
-| Option | Strength | Weakness |
-|---|---|---|
-| A. Manual entry only | Trivial to build; no privacy surface | Fails the Stage 3 finding outright; decays exactly like a spreadsheet |
-| B. **Forward-to-address ingestion** (chosen) | Near-zero ongoing effort; one-time auto-forward rule; no OAuth review; parsing is a bounded, learnable problem | Parsing accuracy is the main risk; needs a review queue as a safety net; hosting an inbound address |
-| C. Gmail OAuth, read the inbox | Best UX; no setup ritual | Restricted scopes + Google verification; heavy consent and privacy burden; blocks a portfolio timeline |
-| D. Browser extension | Captures at the point of applying | Per-site work; doesn't capture replies, which is where the drops happen |
+| Option                                       | Strength                                                                                                       | Weakness                                                                                               |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| A. Manual entry only                         | Trivial to build; no privacy surface                                                                           | Fails the Stage 3 finding outright; decays exactly like a spreadsheet                                  |
+| B. **Forward-to-address ingestion** (chosen) | Near-zero ongoing effort; one-time auto-forward rule; no OAuth review; parsing is a bounded, learnable problem | Parsing accuracy is the main risk; needs a review queue as a safety net; hosting an inbound address    |
+| C. Gmail OAuth, read the inbox               | Best UX; no setup ritual                                                                                       | Restricted scopes + Google verification; heavy consent and privacy burden; blocks a portfolio timeline |
+| D. Browser extension                         | Captures at the point of applying                                                                              | Per-site work; doesn't capture replies, which is where the drops happen                                |
 
 **Recommendation: B**, with paste-a-body as a Should-level fallback. It is the only option that
 is both low-effort for the user and buildable without an approvals process. **If you reject B,
@@ -140,8 +140,8 @@ say so — most of this spec changes.**
 - **Speed:** When a user opens the due list, it renders from cache in **< 500 ms at p95** (measured
   by server timing on the API plus client paint). When a forwarded email arrives, the application
   is visible **< 6 min at p95** (measured from mailbox arrival to row creation).
-  *Amended 2026-10-22 — was `< 30 s`, then `< 2 min`; the $0 serverless architecture polls every
-  5 minutes ([ADR 0002](adr/0002-serverless-ingest.md)).*
+  _Amended 2026-10-22 — was `< 30 s`, then `< 2 min`; the $0 serverless architecture polls every
+  5 minutes ([ADR 0002](adr/0002-serverless-ingest.md))._
 - **Security and privacy:** A user may see **only their own** applications and emails. Test: request
   another user's application ID directly → **403**, and the attempt is logged. Stored personal data:
   name, email, applications, and **email subject + a 500-character snippet only** — full bodies are
@@ -171,12 +171,12 @@ say so — most of this spec changes.**
 
 ## Top risks and plans
 
-| # | Risk | Plan |
-|---|---|---|
-| 1 | **Parser accuracy** — mis-filing creates junk, which destroys trust faster than no product | Build the parser against a corpus of the author's own real emails first (Stage 5 spike). Ship narrow: 3 email types, one sender. Everything else goes to Review. Measure precision before widening. |
-| 2 | **Setup friction** — the auto-forward rule is a 5-minute task a student may never do | Offer two paths: one-click rule instructions for Gmail, and manual "forward this one email now" that works immediately. Instrument time-to-first-application; if > 3 minutes, the wedge is broken. |
-| 3 | **Inbound email reliability** — provider limits, spam filtering, deliverability | Use a provider with a documented inbound webhook, verify with a real domain, monitor ingest failures daily, dead-letter queue from day one. |
-| 4 | **Privacy of employer emails** — other people's names and data in the system | Store snippet only, 30-day retention, single-tenant-per-user access tests, documented deletion. |
+| #   | Risk                                                                                       | Plan                                                                                                                                                                                                |
+| --- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **Parser accuracy** — mis-filing creates junk, which destroys trust faster than no product | Build the parser against a corpus of the author's own real emails first (Stage 5 spike). Ship narrow: 3 email types, one sender. Everything else goes to Review. Measure precision before widening. |
+| 2   | **Setup friction** — the auto-forward rule is a 5-minute task a student may never do       | Offer two paths: one-click rule instructions for Gmail, and manual "forward this one email now" that works immediately. Instrument time-to-first-application; if > 3 minutes, the wedge is broken.  |
+| 3   | **Inbound email reliability** — provider limits, spam filtering, deliverability            | Use a provider with a documented inbound webhook, verify with a real domain, monitor ingest failures daily, dead-letter queue from day one.                                                         |
+| 4   | **Privacy of employer emails** — other people's names and data in the system               | Store snippet only, 30-day retention, single-tenant-per-user access tests, documented deletion.                                                                                                     |
 
 ## Resolved open questions (2026-10-20)
 
@@ -192,4 +192,3 @@ say so — most of this spec changes.**
    is kept while it exists → structured fields kept indefinitely.
 4. **Hosting: deferred to Stage 5.** Free-tier providers only for v1 (Railway / Render / Vercel and
    equivalents); the paid path is a later question.
-

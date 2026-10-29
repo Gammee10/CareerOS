@@ -7,7 +7,7 @@
 
 ## Context
 
-The v1 wedge is *near-zero-effort capture*: the user forwards application email to an address we
+The v1 wedge is _near-zero-effort capture_: the user forwards application email to an address we
 control, and the application records itself. The Stage 4 spec assumed an inbound webhook, which
 requires **MX records on a domain we own**.
 
@@ -28,17 +28,17 @@ Ingestion runs through a **dedicated Gmail mailbox polled over IMAP**:
 
 These are known, deliberate, and must not be rediscovered as surprises later.
 
-| # | Limitation | Severity | Mitigation / note |
-|---|---|---|---|
-| L1 | **Latency ≥ 1 minute** (60 s poll), versus the original 30 s target | Low | Spec NFR amended to **< 2 min p95**. Acceptable for a Monday-digest product |
-| L2 | **Single shared mailbox** for all users — one point of failure, one throughput ceiling | High at scale | Fine to a few hundred users. Beyond that, the mailbox is the bottleneck before the app is |
-| L3 | **Depends on Gmail tolerating automated IMAP access.** Google can throttle or break it without notice | High | No contractual guarantee. Exit plan below. Monitor for auth failures daily |
-| L4 | **Requires a phone-verified Google account with 2FA and an app password** | Medium | One-time setup. It is an identity dependency, not just a technical one |
-| L5 | **Forwarding verification is manual** — the user's Gmail sends a confirmation to our mailbox, and a human must click it | Medium | Acceptable for a handful of users; a real blocker for self-serve signup |
-| L6 | **Plus-addresses are guessable in principle** — anyone who learns a code can inject mail into that user's account | Medium | 128-bit random codes; unknown senders land in Review, never auto-create; rate-limit per code. Recorded, not eliminated |
-| L7 | **Forwarded mail can be eaten by spam filtering** before it ever reaches us | Medium | Nothing we can do on our side. Fallback is manual add or paste |
-| L8 | **No delivery receipts or bounce visibility** | Low | Absence of mail is indistinguishable from absence of applications |
-| L9 | **IMAP re-delivery is normal** — the same message can appear twice | Low | Idempotency on `Message-ID`, already required by Stage 4 |
+| #   | Limitation                                                                                                              | Severity      | Mitigation / note                                                                                                      |
+| --- | ----------------------------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| L1  | **Latency ≥ 1 minute** (60 s poll), versus the original 30 s target                                                     | Low           | Spec NFR amended to **< 2 min p95**. Acceptable for a Monday-digest product                                            |
+| L2  | **Single shared mailbox** for all users — one point of failure, one throughput ceiling                                  | High at scale | Fine to a few hundred users. Beyond that, the mailbox is the bottleneck before the app is                              |
+| L3  | **Depends on Gmail tolerating automated IMAP access.** Google can throttle or break it without notice                   | High          | No contractual guarantee. Exit plan below. Monitor for auth failures daily                                             |
+| L4  | **Requires a phone-verified Google account with 2FA and an app password**                                               | Medium        | One-time setup. It is an identity dependency, not just a technical one                                                 |
+| L5  | **Forwarding verification is manual** — the user's Gmail sends a confirmation to our mailbox, and a human must click it | Medium        | Acceptable for a handful of users; a real blocker for self-serve signup                                                |
+| L6  | **Plus-addresses are guessable in principle** — anyone who learns a code can inject mail into that user's account       | Medium        | 128-bit random codes; unknown senders land in Review, never auto-create; rate-limit per code. Recorded, not eliminated |
+| L7  | **Forwarded mail can be eaten by spam filtering** before it ever reaches us                                             | Medium        | Nothing we can do on our side. Fallback is manual add or paste                                                         |
+| L8  | **No delivery receipts or bounce visibility**                                                                           | Low           | Absence of mail is indistinguishable from absence of applications                                                      |
+| L9  | **IMAP re-delivery is normal** — the same message can appear twice                                                      | Low           | Idempotency on `Message-ID`, already required by Stage 4                                                               |
 
 ## Consequences
 
@@ -72,4 +72,3 @@ Auto-forwarding through Gmail was tested end to end against a genuine third-part
   production, but it cost two hours of false negatives in testing.
 - Forwarding-address verification needs a human click in a signed-in browser; a scripted GET
   returns HTTP 200 without confirming anything.
-

@@ -13,12 +13,12 @@ reach. Stage 3 therefore ran as a **structured self-study**, and the trade is ex
 
 **We drop the demand claim. We keep the work claim.**
 
-| This stage CAN establish | This stage CANNOT establish |
-|---|---|
-| The workflow is real for at least one person | That anyone else has the same problem |
-| The messy details a survey would flatten | Willingness to switch away from email |
-| A realistic dataset to build and test against | Retention, market size, willingness to pay |
-| Whether the author's own coping is actually broken | That the "drop" pain is common |
+| This stage CAN establish                           | This stage CANNOT establish                |
+| -------------------------------------------------- | ------------------------------------------ |
+| The workflow is real for at least one person       | That anyone else has the same problem      |
+| The messy details a survey would flatten           | Willingness to switch away from email      |
+| A realistic dataset to build and test against      | Retention, market size, willingness to pay |
+| Whether the author's own coping is actually broken | That the "drop" pain is common             |
 
 **Demand remains an accepted, unvalidated risk.** Recorded so no later stage quietly assumes
 validation happened.
@@ -49,7 +49,7 @@ recorded; the count itself is a floor ("at minimum 15"). Recall is not imprecise
 
 - **One missed interview.**
 - **One missed exam/assessment**, roughly one week before this interview.
-- At least one deadline that passed after the update was *seen* and consciously deferred:
+- At least one deadline that passed after the update was _seen_ and consciously deferred:
   "I saw the email and said I'll apply/check later, and the deadline passed."
 
 The mechanism is **deferral, not ignorance**. This directly confirms Stage 2's "48 hours between
@@ -59,8 +59,8 @@ knowing and doing".
 
 - Sources named: **memory, email, employer sites.** Nothing else.
 - **No tracker app has ever been tried** (Q8).
-- A spreadsheet is not in use, and was judged explicitly: *"a spreadsheet has no reminder, it is
-  not much different from checking my email, only organised."*
+- A spreadsheet is not in use, and was judged explicitly: _"a spreadsheet has no reminder, it is
+  not much different from checking my email, only organised."_
 
 **Correction to Stage 2:** for the author, the competitor is **email + memory**. The spreadsheet
 is not the incumbent; it is a rejected alternative. "Organised email" is the bar, and the user does
@@ -81,18 +81,18 @@ Stage 2 modelled Recall and Drop as two parallel pains. The evidence says they a
 > **Retrieval costs too much → so it is avoided → so updates go unseen → so dates are missed.**
 
 The missed interview is downstream of "checking is painful". This matters because it moves the
-product's centre of gravity: the job is not *storing* applications, it is **making the check
+product's centre of gravity: the job is not _storing_ applications, it is **making the check
 nearly free and putting it where the user already is.**
 
 ---
 
 ## Decision (adapted for n=1)
 
-| Outcome | Evidence for | Evidence against |
-|---|---|---|
-| **GO** | Recall failed outright; two real drops in ~3 months, one within a week; record spread across memory, email and employer sites | n=1, self-reported, no external demand evidence |
-| **CHANGE** | The pain is real but narrow — it is the *check*, not the *record*. Pipeline stages and analytics are unsupported by this evidence | The author does want a record of what was applied to ("searching through applied jobs") |
-| **STOP** | — | Nothing supports this: the pain is the author's, and it cost them an interview |
+| Outcome    | Evidence for                                                                                                                      | Evidence against                                                                        |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| **GO**     | Recall failed outright; two real drops in ~3 months, one within a week; record spread across memory, email and employer sites     | n=1, self-reported, no external demand evidence                                         |
+| **CHANGE** | The pain is real but narrow — it is the _check_, not the _record_. Pipeline stages and analytics are unsupported by this evidence | The author does want a record of what was applied to ("searching through applied jobs") |
+| **STOP**   | —                                                                                                                                 | Nothing supports this: the pain is the author's, and it cost them an interview          |
 
 **Decision: GO**, with a **change of emphasis**.
 
@@ -120,14 +120,14 @@ retention after the build.
 
 ## Revised risk register
 
-| Risk | Status after Stage 3 |
-|---|---|
-| R1 — People will not maintain a second system | **Untested.** Still the top risk. |
-| R2 — The record decays without manual typing | **Raised to urgent.** The author could not recall enough to type. Capture must be automatic or near-free. |
-| R3 — The trigger is why people return | **Strengthened.** Every reported loss came from a missed trigger. |
-| R4 — Demand | **Untested.** Accepted risk, decided knowingly. |
-| R5 — Hiring stages are modelable | **Untested.** No consistent stage vocabulary observed. |
-| R6 — Attention competition | **New.** The author is a student sitting exams. The product competes with coursework, not just other apps. |
+| Risk                                          | Status after Stage 3                                                                                       |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| R1 — People will not maintain a second system | **Untested.** Still the top risk.                                                                          |
+| R2 — The record decays without manual typing  | **Raised to urgent.** The author could not recall enough to type. Capture must be automatic or near-free.  |
+| R3 — The trigger is why people return         | **Strengthened.** Every reported loss came from a missed trigger.                                          |
+| R4 — Demand                                   | **Untested.** Accepted risk, decided knowingly.                                                            |
+| R5 — Hiring stages are modelable              | **Untested.** No consistent stage vocabulary observed.                                                     |
+| R6 — Attention competition                    | **New.** The author is a student sitting exams. The product competes with coursework, not just other apps. |
 
 ## What I do NOT know yet
 

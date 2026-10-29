@@ -3,7 +3,7 @@
 **Status:** ✅ Decided and approved (2026-10-20)
 **Output of this stage:** one chosen idea, in one sentence.
 
-Format for each entry: *"[Who] struggles with [problem] when [situation]."*
+Format for each entry: _"[Who] struggles with [problem] when [situation]."_
 
 ## Chosen idea
 
@@ -15,7 +15,7 @@ Approved by the user on 2026-10-20.
 
 ## How the "who" was defined
 
-Deliberately **situational, not demographic**. The segment is the *situation*: multiple live
+Deliberately **situational, not demographic**. The segment is the _situation_: multiple live
 applications, real deadlines, follow-ups over a 3–6 month window, details spread across
 inbox, portals, and spreadsheets. Students, recent graduates and career switchers all enter
 through that same door.
@@ -42,22 +42,22 @@ Ideas 1, 2 and 6 are absorbed by the chosen idea. Ideas 3, 4 and 5 are deferred 
 **What the decision is:** whether the product is anchored to one demographic group or to a
 shared situation. It decides what every later stage designs for.
 
-| Option | Strength | Weakness |
-|---|---|---|
-| A. One demographic (final-year students) | Sharpest positioning, easiest to test, no ambiguity | Arbitrary — excludes people with identical pain; undersells the product |
-| B. "All job seekers" | Maximum reach on paper | No design anchor, no first-run experience, becomes an average product |
-| C. Situation-defined: active multi-application search, one anchor workflow | Broad reach *and* a concrete design target; differences get parked, not blurred | Needs discipline to say "later" instead of "also"; positioning slightly less punchy |
+| Option                                                                     | Strength                                                                        | Weakness                                                                            |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| A. One demographic (final-year students)                                   | Sharpest positioning, easiest to test, no ambiguity                             | Arbitrary — excludes people with identical pain; undersells the product             |
+| B. "All job seekers"                                                       | Maximum reach on paper                                                          | No design anchor, no first-run experience, becomes an average product               |
+| C. Situation-defined: active multi-application search, one anchor workflow | Broad reach _and_ a concrete design target; differences get parked, not blurred | Needs discipline to say "later" instead of "also"; positioning slightly less punchy |
 
 **Decision: C.**
 
 ## Deferred and parked
 
-| Item | Disposition | Why |
-|---|---|---|
-| Career-switcher evidence / skills mapping | Deferred feature | Real need, but a second product; a skills-content problem, not the tracking anchor |
-| Visa-tied start dates | Deferred | High stakes but narrow; we cannot source the timeline data |
-| Career-services advisers | Parked | They manage *other people's* searches — different buyer, different product |
-| "What did I try and what came back" | Feature of the anchor | Becomes the analytics/insight layer later, not the reason to start |
+| Item                                      | Disposition           | Why                                                                                |
+| ----------------------------------------- | --------------------- | ---------------------------------------------------------------------------------- |
+| Career-switcher evidence / skills mapping | Deferred feature      | Real need, but a second product; a skills-content problem, not the tracking anchor |
+| Visa-tied start dates                     | Deferred              | High stakes but narrow; we cannot source the timeline data                         |
+| Career-services advisers                  | Parked                | They manage _other people's_ searches — different buyer, different product         |
+| "What did I try and what came back"       | Feature of the anchor | Becomes the analytics/insight layer later, not the reason to start                 |
 
 ## Open questions for Stage 2
 

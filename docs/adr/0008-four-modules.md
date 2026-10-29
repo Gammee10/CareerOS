@@ -17,12 +17,12 @@ functions without knowing the internals. Capability-first splitting fails that t
 
 **Four modules, each owning its tables and exposing at most four functions:**
 
-| Module | Owns | Doors |
-|---|---|---|
-| `intake` | `inbound`, `review_items` | `ingest`, `listReview`, `resolveReview`, `reprocess` |
-| `ledger` | `applications`, `events` | `create`, `update`, `get`, `list` |
-| `planning` | `due_items` | `listDue`, `complete`, `snooze`, `sync` |
-| `delivery` | `digests` | `sendIfDue`, `preview` |
+| Module     | Owns                      | Doors                                                |
+| ---------- | ------------------------- | ---------------------------------------------------- |
+| `intake`   | `inbound`, `review_items` | `ingest`, `listReview`, `resolveReview`, `reprocess` |
+| `ledger`   | `applications`, `events`  | `create`, `update`, `get`, `list`                    |
+| `planning` | `due_items`               | `listDue`, `complete`, `snooze`, `sync`              |
+| `delivery` | `digests`                 | `sendIfDue`, `preview`                               |
 
 **Dependencies are one-way and acyclic:** `intake → ledger ← planning ← delivery`. Modules never read
 another module's tables; routes and pages sit above all four and may call any of them.
@@ -54,4 +54,3 @@ modules, or `intake` legitimately needs a fifth door.
 ## Amendment — 2026-10-24
 
 D4.1 folded the separate `review_items` table into `inbound` as a status value. `intake` now owns** one table, `inbound`. The module boundary and its four doors are unchanged.
-

@@ -1,0 +1,30 @@
+node_modules/
+node_modules.*
+.pnpm-store/
+.pnpm-cache/
+.next/
+dist/
+build/
+out/
+coverage/
+
+# Lockfile formatting is managed by pnpm, not Prettier.
+pnpm-lock.yaml
+
+# Local environment and secrets — never committed
+.env
+.env.*
+!.env.example
+.secrets/
+
+# Throwaway spike code and scratch files
+.tmp/
+
+# Editor and OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
