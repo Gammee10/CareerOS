@@ -20,7 +20,9 @@ export async function GET(): Promise<Response> {
       return Response.json(error.toPayload(), { status: error.status });
     }
 
-    return Response.json(buildHealthPayload(row, new Date()));
+    return Response.json(
+      buildHealthPayload(row, new Date(), process.env.VERCEL_GIT_COMMIT_SHA ?? null),
+    );
   } catch (cause) {
     // A dependency failure is not our bug. Say which dependency and promise nothing changed; the
     // logger drops anything that looks like email content and never records the connection string.

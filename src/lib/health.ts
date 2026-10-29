@@ -16,9 +16,19 @@ export interface HealthPayload {
   database: string;
   databaseTime: string;
   checkedAt: string;
+  /**
+   * The commit this deployment was built from, when the platform tells us (Vercel sets
+   * VERCEL_GIT_COMMIT_SHA). Null locally and in tests. This is how you answer "what is actually
+   * running?" without opening a dashboard.
+   */
+  commit: string | null;
 }
 
-export function buildHealthPayload(row: HealthRow, checkedAt: Date): HealthPayload {
+export function buildHealthPayload(
+  row: HealthRow,
+  checkedAt: Date,
+  commit: string | null = null,
+): HealthPayload {
   if (!(row.now instanceof Date) || Number.isNaN(row.now.getTime())) {
     throw new TypeError('health: database returned an invalid timestamp');
   }
@@ -31,5 +41,6 @@ export function buildHealthPayload(row: HealthRow, checkedAt: Date): HealthPaylo
     database: row.database,
     databaseTime: row.now.toISOString(),
     checkedAt: checkedAt.toISOString(),
+    commit,
   };
 }

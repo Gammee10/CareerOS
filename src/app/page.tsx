@@ -14,6 +14,7 @@ interface HealthPayload {
   database: string;
   databaseTime: string;
   checkedAt: string;
+  commit: string | null;
 }
 
 interface ErrorPayload {
@@ -81,6 +82,14 @@ export default function HomePage() {
           <dd>
             <time dateTime={state.data.checkedAt}>{state.data.checkedAt}</time>
           </dd>
+          {state.data.commit && (
+            <>
+              <dt>Deployed commit</dt>
+              <dd>
+                <code>{state.data.commit.slice(0, 7)}</code>
+              </dd>
+            </>
+          )}
         </dl>
       )}
     </main>
