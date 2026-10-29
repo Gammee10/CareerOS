@@ -27,3 +27,12 @@ boundary, Drizzle for SQL, Vitest for tests, pnpm and Node 22 LTS.
 - **Python backend + TypeScript UI**: two deploys and two toolchains for a one-deployable system.
 - **Python only with server templates**: every interaction becomes a round trip, and Vercel's Python
   support is weaker than its Next.js support.
+
+## Amendment - 2026-10-30: Next.js 16, not 15
+
+The decision was recorded as Next.js 15 because that was current when it was written. At
+implementation time the current major is **Next.js 16** (React 19.3). Installing the older major on
+purpose would mean starting on a version already past its release cycle.
+
+The build was verified on 16.4.3: / renders statically, /api/health is dynamic, and the build
+needs no secrets because the database client is created lazily. Nothing else in this ADR changes.

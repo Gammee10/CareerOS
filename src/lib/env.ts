@@ -87,3 +87,22 @@ export function serverConfig(): ServerConfig {
 export function publicConfig(): PublicConfig {
   return parseConfig(process.env).public;
 }
+
+/**
+ * The database connection string alone.
+ *
+ * The walking skeleton must be able to read a clock without also having the mailbox credentials
+ * configured. Narrow accessors are how a module asks for exactly what it needs — and how the
+ * skeleton can deploy before the mail secrets exist.
+ */
+const databaseSchema = z.object({
+  DATABASE_URL: z.string().min(1).startsWith('postgres', 'must be a postgres:// connection string'),
+});
+
+export function databaseUrl(): string {
+  const result = databaseSchema.safeParse(process.env);
+  if (!result.success) {
+    throw new ConfigError(formatIssues(result.error));
+  }
+  return result.data.DATABASE_URL;
+}

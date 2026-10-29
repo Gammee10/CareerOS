@@ -19,6 +19,7 @@ build/
 .next/
 out/
 .vercel/
+*.tsbuildinfo
 
 # Logs and local junk
 *.log
