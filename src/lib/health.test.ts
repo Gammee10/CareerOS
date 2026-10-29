@@ -16,7 +16,17 @@ describe('buildHealthPayload', () => {
       database: 'postgres',
       databaseTime: '2026-10-29T23:59:58.000Z',
       checkedAt: '2026-10-30T00:00:00.000Z',
+      commit: null,
     });
+  });
+
+  it('reports the deployed commit when the platform provides one', () => {
+    const payload = buildHealthPayload(
+      { now: new Date(1_000), database: 'postgres' },
+      checkedAt,
+      'abcdef1234567890',
+    );
+    expect(payload.commit).toBe('abcdef1234567890');
   });
 
   it('keeps the two timestamps distinct, so a client can tell them apart', () => {
