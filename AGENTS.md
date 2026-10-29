@@ -17,6 +17,12 @@ pnpm typecheck   # tsc --noEmit
 pnpm format      # prettier --write
 ```
 
+## Workflow
+
+`main` deploys, so `main` is always green. Work on a short branch (`feat/…`, `fix/…`, `chore/…`,
+`docs/…`), open a pull request, and merge with squash once `verify` passes. Direct pushes to `main`
+are blocked. Full policy: [`docs/07-foundation/git-flow.md`](docs/07-foundation/git-flow.md).
+
 ## Shape
 
 Four modules under `src/modules/`, one-way dependencies only:
